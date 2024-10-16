@@ -16,9 +16,11 @@ let box7 = $("#box7");
 let box8 = $("#box8");
 
 // this variable represents the players x and o
+// added the playerNames variables to add any name in the text boxes.  Added this after submitting assignment.
 let player1 = "X";
 let player2 = "O";
-
+let player1Name = "";
+let player2Name = "";
 // Winner at 5 turns or more and can't have more than 9 turns
 let turn = 0;
 // need to know if a player has won to move on the the next round.
@@ -64,13 +66,13 @@ const checkWinner = (currentPlayer, a, b, c) => {
 
     
 
-    if (currentPlayer === "X") {
-      currentPlayer = "Player1";
+    if (currentPlayer === player1) {
+      $("#alertWinner").text(`GAME OVER... ${player1Name} WINS!`);
     } else {
-      currentPlayer = "Player 2";
+      $("#alertWinner").text(`GAME OVER... ${player2Name} WINS!`);
     }
 
-    $("#alertWinner").text(`GAME OVER...${currentPlayer} WINS!`);
+    
     $("#alertWinner").show();
 
     endGame();
@@ -89,11 +91,15 @@ const checkOutcomes = () => {
 };
 
 const startGame = () => {
+  player1Name = $("#player1Name").val() || ""
+  player2Name = $("#player2Name").val() || ""
     console.log("Start Game!");
     turn = 0; // Reset turn at the start
     currentPlayer = player1; // Set starting player
     console.log(currentPlayer);
   
+    $("#p1").text (`${player1Name} - X`);
+    $("#p2").text(`${player2Name} - O`)
     $("#p1").addClass("bg-dark border border-danger");
     $("#alertStart").show();
   
@@ -132,5 +138,7 @@ const startGame = () => {
   
   // Event listener for start button
   document.getElementById("startBtn").addEventListener("click", () => startGame());
+
+  
   
   
