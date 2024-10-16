@@ -97,7 +97,7 @@ const startGame = () => {
     $("#p1").addClass("bg-dark border border-danger");
     $("#alertStart").show();
   
-    // Disable the start button after the game starts
+    // Disable the start button after the game starts. Prevents player from starting game again until after reset
     $("#startBtn").prop("disabled", true);
   
     $(".box").on("click", function () {
@@ -127,7 +127,7 @@ const startGame = () => {
   // Reset button logic
   document.getElementById("resetBtn").addEventListener("click", () => {
     document.location.reload(true);
-    $("#startBtn").prop("disabled", false); // Re-enable the start button after reset
+    $("#startBtn").prop("disabled", false); // Re-enables the start button after reset
   });
   
   // Event listener for start button
