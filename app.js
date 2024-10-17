@@ -46,11 +46,24 @@ const winningOutcomes = [
 // End the game by disabling further clicks
 const endGame = () => {
   console.log("GAME OVER");
-  // Disables all boxes
   $(".box").css("pointer-events", "none");
-  $('#p1').removeClass ("bg-dark border border-danger");
-  $('#p2').removeClass ("bg-dark border border-warning");
+  $('#p1').removeClass("bg-dark border border-danger");
+  $('#p2').removeClass("bg-dark border border-warning");
+
+  // Fireworks effect
+  confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+  });
+
+  $("#grid").addClass("grid-pop");
+
+  setTimeout(() => {
+      $("#grid").removeClass("grid-pop");
+  }, 300);
 };
+
 const checkWinner = (currentPlayer, a, b, c) => {
   if (
     a.text() === currentPlayer &&
@@ -64,15 +77,12 @@ const checkWinner = (currentPlayer, a, b, c) => {
     b.removeClass("text-dark bg-success").addClass("text-success bg-light");
     c.removeClass("text-dark bg-success").addClass("text-success bg-light");
 
-    
-
     if (currentPlayer === player1) {
       $("#alertWinner").text(`GAME OVER... ${player1Name} WINS!`);
     } else {
       $("#alertWinner").text(`GAME OVER... ${player2Name} WINS!`);
     }
 
-    
     $("#alertWinner").show();
 
     endGame();
@@ -80,65 +90,73 @@ const checkWinner = (currentPlayer, a, b, c) => {
 };
 // Checks all possible winning outcomes
 const checkOutcomes = () => {
-    winningOutcomes.forEach(outcome => {
-      checkWinner(currentPlayer, ...outcome);
-    });
-// This checks for draw if no winning outcome
-  if(turn === 9 && winner === false){
+  winningOutcomes.forEach((outcome) => {
+    checkWinner(currentPlayer, ...outcome);
+  });
+  // This checks for draw if no winning outcome
+  if (turn === 9 && winner === false) {
     endGame();
     $("#alertDraw").show();
   }
 };
 
 const startGame = () => {
-  player1Name = $("#player1Name").val() || ""
-  player2Name = $("#player2Name").val() || ""
-    console.log("Start Game!");
-    turn = 0; // Reset turn at the start
-    currentPlayer = player1; // Set starting player
-    console.log(currentPlayer);
-  
-    $("#p1").text (`${player1Name} - X`);
-    $("#p2").text(`${player2Name} - O`)
-    $("#p1").addClass("bg-dark border border-danger");
-    $("#alertStart").show();
-  
-    // Disable the start button after the game starts. Prevents player from starting game again until after reset
-    $("#startBtn").prop("disabled", true);
-  
-    $(".box").on("click", function () {
-      $("#alertStart").hide();
-  
-      // Check if the clicked box is empty and the game is still ongoing
-      if ($(this).text() === "" && !winner) {
-        $(this).text(currentPlayer);
-        turn++;
-  
-        if (turn > 4) {
-          console.log("Checking for a winner...");
-          checkOutcomes();
-        }
-        //ternary operator to toggle between players using jquery
-        currentPlayer = currentPlayer === player1 ? player2 : player1;
-        $("#p1").toggleClass("bg-dark border border-danger");
-        $("#p2").toggleClass("bg-dark border border-warning");
-      } else if (winner) {
-        console.log("Game is over!");
-      } else {
-        console.log("Box already occupied!");
-      }
-    });
-  };
-  
-  // Reset button logic
-  document.getElementById("resetBtn").addEventListener("click", () => {
-    document.location.reload(true);
-    $("#startBtn").prop("disabled", false); // Re-enables the start button after reset
-  });
-  
-  // Event listener for start button
-  document.getElementById("startBtn").addEventListener("click", () => startGame());
+  player1Name = $("#player1Name").val() || "";
+  player2Name = $("#player2Name").val() || "";
+  console.log("Start Game!");
+  turn = 0; // Reset turn at the start
+  currentPlayer = player1; // Set starting player
+  console.log(currentPlayer);
 
-  
-  
-  
+  $("#p1").text(`${player1Name} - X`);
+  $("#p2").text(`${player2Name} - O`);
+  $("#p1").addClass("bg-dark border border-danger");
+  $("#alertStart").show();
+
+  // Disable the start button after the game starts. Prevents player from starting game again until after reset
+  $("#startBtn").prop("disabled", true);
+
+  $(".box").on("click", function () {
+    $("#alertStart").hide();
+
+    // Check if the clicked box is empty and the game is still ongoing
+    if ($(this).text() === "" && !winner) {
+      $(this).text(currentPlayer);
+      turn++;
+
+      if (turn > 4) {
+        console.log("Checking for a winner...");
+        checkOutcomes();
+      }
+
+      if (currentPlayer === player1) {
+        $("#p1")
+          .animate({ top: "-=10px" }, 100)
+          .animate({ top: "+=10px" }, 100);
+      } else {
+        $("#p2")
+          .animate({ top: "-=20px" }, 100)
+          .animate({ top: "+=20px" }, 100);
+      }
+      //ternary operator to toggle between players using jquery
+      currentPlayer = currentPlayer === player1 ? player2 : player1;
+      $("#p1").toggleClass("bg-dark border border-danger");
+      $("#p2").toggleClass("bg-dark border border-warning");
+    } else if (winner) {
+      console.log("Game is over!");
+    } else {
+      console.log("Box already occupied!");
+    }
+  });
+};
+
+// Reset button logic
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.location.reload(true);
+  $("#startBtn").prop("disabled", false); // Re-enables the start button after reset
+});
+
+// Event listener for start button
+document
+  .getElementById("startBtn")
+  .addEventListener("click", () => startGame());
